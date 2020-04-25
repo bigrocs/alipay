@@ -17,10 +17,12 @@ func TestMchPayMicropay(t *testing.T) {
 	// 配置参数
 	request := requests.NewCommonRequest()
 	request.BizContent = map[string]interface{}{
-		"auth_code":    "285653237303565644",
-		"title":        "测试商品名称1",
-		"out_trade_no": "GZ202001011753431451",
-		"total_amount": 0.01,
+		"subject":         "测试商品名称1",
+		"scene":           "bar_code",
+		"auth_code":       "286906367716990981",
+		"out_trade_no":    "GZ2020010117534314513",
+		"total_amount":    0.02,
+		"timeout_express": "30m",
 	}
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
@@ -28,3 +30,29 @@ func TestMchPayMicropay(t *testing.T) {
 	// fmt.Println(response, err)
 	fmt.Println(req, err)
 }
+
+// map[
+// 	alipay_trade_pay_response:
+// 	map[
+// 		buyer_logon_id:rsk***@sandbox.com
+// 		buyer_pay_amount:0.02
+// 		buyer_user_id:2088102174959923
+// 		buyer_user_type:PRIVATE
+// 		code:10000
+// 		fund_bill_list:[
+// 			map[
+// 				amount:0.02
+// 				fund_channel:ALIPAYACCOUNT
+// 			]
+// 		]
+// 		gmt_payment:2020-04-24 11:27:26
+// 		invoice_amount:0.02
+// 		msg:Success
+// 		out_trade_no:GZ2020010117534314513
+// 		point_amount:0.00
+// 		receipt_amount:0.02
+// 		total_amount:0.02
+// 		trade_no:2020042422001459920500905861
+// 	]
+// 	sign:nq2l2bW72xitQYtCHn4XbOan1Lmwqhy+o0mO6cxzEVf4gJ4x6rm8RCiR9YeOeUl6aOygRFV+6I21t/fRsAK9LvNwtJMpaxyBY0yuQ60ycck17b5hxkWgYYjtYmFahfgnIo3UrZE/y0iLfBu2g/6P1Mp83g1MVU0gzIr1FbsBMACe9JastpNA/ggyZjRJA/fboEbNJAsI+QypB/7OvOXElsI7ZyGv1O6AkpUr01EjCILUQBSQP4VCz0QlCBHQWjduAQsx0s1Pryso9hNiOIPxr8DOsC61cQVM+rjhWeagOXMKm7QkIt2svbgaEuOmv5fmvA7dLgXV+3650nMvCws0wQ==
+// ]

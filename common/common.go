@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/clbanning/mxj"
@@ -27,9 +26,9 @@ func (c *Common) Action(response *responses.CommonResponse) (err error) {
 func (c *Common) APIBaseURL() string { // TODO(): 后期做容灾功能
 	con := c.Config
 	if con.Sandbox { // 沙盒模式
-		return "https://openapi.alipaydev.com/gateway.do"
+		return "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 	}
-	return "https://openapi.alipay.com/gateway.do"
+	return "https://openapi.alipay.com/gateway.do?charset=utf-8"
 }
 
 // Request 执行请求
@@ -90,10 +89,9 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	params["sign"] = sign
 	urlParam := util.FormatURLParam(params)
 	res, err := util.PostForm(c.APIBaseURL(), urlParam)
-	fmt.Println(string(res))
-	// if err != nil {
-	// 	return err
-	// }
-	// response.SetHttpContent(res, "xml")
+	if err != nil {
+		return err
+	}
+	response.SetHttpContent(res, "string")
 	return
 }
