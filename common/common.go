@@ -79,21 +79,17 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	} else {
 		params["version"] = "1.0"
 	}
-	fmt.Println(params)
-	sign, err := util.Sign(params, con.PrivateKey, params["sign_type"].(string)) // 开发签名
+	sign, err := util.Sign(params, util.FormatPrivateKey(con.PrivateKey), params["sign_type"].(string)) // 开发签名
 	fmt.Println(params, sign, err)
 	if err != nil {
 		return err
 	}
 	params["sign"] = sign
 	fmt.Println(params, sign)
-	if err != nil {
-		return err
-	}
-	res, err := util.PostXML(c.APIBaseURL(), params)
-	if err != nil {
-		return err
-	}
-	response.SetHttpContent(res, "xml")
+	// res, err := util.PostXML(c.APIBaseURL(), params)
+	// if err != nil {
+	// 	return err
+	// }
+	// response.SetHttpContent(res, "xml")
 	return
 }
