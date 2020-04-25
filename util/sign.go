@@ -11,6 +11,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"hash"
+	"net/url"
 	"sort"
 	"strconv"
 	"strings"
@@ -58,7 +59,7 @@ func EncodeSignParams(params map[string]interface{}) string {
 
 // Sign 支付宝签名支付签名.
 //  params: 待签名的参数集合
-//  privateKey: api密钥
+//  privateKey: 密钥
 func Sign(params map[string]interface{}, privateKey string, signType string) (sign string, err error) {
 	encodeSignParams := EncodeSignParams(params)
 	var (
@@ -68,7 +69,6 @@ func Sign(params map[string]interface{}, privateKey string, signType string) (si
 		hashs          crypto.Hash
 		encryptedBytes []byte
 	)
-
 	if block, _ = pem.Decode([]byte(privateKey)); block == nil {
 		return "", errors.New("pem.Decode：privateKey decode error")
 	}
@@ -139,4 +139,13 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 	buffer.WriteString("-----END RSA PRIVATE KEY-----\n")
 	pKey = buffer.String()
 	return
+}
+
+// FormatURLParam 格式化请求URL参数
+func FormatURLParam(params map[string]interface{}) (urlParam string) {
+	v := url.Values{}
+	for key, value := range params {
+		v.Add(key, value.(string))
+	}
+	return v.Encode()
 }

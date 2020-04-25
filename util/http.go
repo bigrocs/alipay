@@ -13,6 +13,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/clbanning/mxj"
 	"golang.org/x/crypto/pkcs12"
@@ -26,6 +27,21 @@ func HTTPGet(uri string) ([]byte, error) {
 	}
 
 	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
+	}
+	return ioutil.ReadAll(response.Body)
+}
+
+//PostForm form  数据请求
+func PostForm(uri string, obj string) ([]byte, error) {
+	reader := strings.NewReader(obj)
+	response, err := http.Post(uri, "application/x-www-form-urlencoded", reader)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}

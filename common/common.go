@@ -25,6 +25,10 @@ func (c *Common) Action(response *responses.CommonResponse) (err error) {
 
 // APIBaseURL 默认 API 网关
 func (c *Common) APIBaseURL() string { // TODO(): 后期做容灾功能
+	con := c.Config
+	if con.Sandbox { // 沙盒模式
+		return "https://openapi.alipaydev.com/gateway.do"
+	}
 	return "https://openapi.alipay.com/gateway.do"
 }
 
@@ -80,13 +84,13 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 		params["version"] = "1.0"
 	}
 	sign, err := util.Sign(params, util.FormatPrivateKey(con.PrivateKey), params["sign_type"].(string)) // 开发签名
-	fmt.Println(params, sign, err)
 	if err != nil {
 		return err
 	}
 	params["sign"] = sign
-	fmt.Println(params, sign)
-	// res, err := util.PostXML(c.APIBaseURL(), params)
+	urlParam := util.FormatURLParam(params)
+	res, err := util.PostForm(c.APIBaseURL(), urlParam)
+	fmt.Println(string(res))
 	// if err != nil {
 	// 	return err
 	// }

@@ -14,4 +14,5 @@ type Config struct {
 	Version         string `json:"version"`            //调用的接口版本，固定为：1.0
 	NotifyUrl       string `json:"notify_url"`         //支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 	BizContent      string `json:"biz_content"`        //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
+	Sandbox         bool   `json:"sandbox"`            // 沙盒
 }
