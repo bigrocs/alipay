@@ -2,9 +2,7 @@ package requests
 
 // CommonRequest 公共请求
 type CommonRequest struct {
-	Domain      string
-	ApiName     string
-	QueryParams map[string]interface{}
+	BizContent map[string]interface{}
 }
 
 // NewCommonRequest 创建新的公共连接

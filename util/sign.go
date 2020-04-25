@@ -3,52 +3,108 @@ package util
 import (
 	"bufio"
 	"bytes"
+	"crypto"
 	"crypto/md5"
+	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/x509"
+	"encoding/base64"
 	"encoding/hex"
+	"encoding/pem"
+	"errors"
 	"hash"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 const (
-	SignType_MD5         = "MD5"
-	SignType_SHA1        = "SHA1"
-	SignType_HMAC_SHA256 = "HMAC-SHA256"
+	SignType_MD5    = "MD5"
+	SignType_SHA1   = "SHA1"
+	SignType_SHA256 = "SHA256"
 )
 
 // VerifySign 验证支付
-func VerifySign(params map[string]interface{}, apiKey string, signType string) bool {
+func VerifySign(params map[string]interface{}, privateKey string, signType string) bool {
 	bodySign := params["sign"]
-	sign := Sign(params, apiKey, signType)
+	sign, err := Sign(params, privateKey, signType)
+	if err != nil {
+		return false
+	}
 	return bodySign == sign
 }
 
-// Sign 微信支付签名.
-//  params: 待签名的参数集合
-//  apiKey: api密钥
-//  fn:     func() hash.Hash, 如果为 nil 则默认用 md5.New
-func Sign(params map[string]interface{}, apiKey string, signType string) string {
-	if signType == "" {
-		signType = SignType_MD5
+// EncodeSignParams 编码符号参数
+func EncodeSignParams(params map[string]interface{}) string {
+	var buf strings.Builder
+	keys := make([]string, 0, len(params))
+	for k := range params {
+		if k == "sign" {
+			continue
+		}
+		keys = append(keys, k)
 	}
-	var h hash.Hash
-	switch signType {
-	case SignType_MD5:
-		h = md5.New()
-	case SignType_SHA1:
-		h = sha1.New()
-	default:
-		panic("unsupported signType")
+	sort.Strings(keys)
+	for _, k := range keys {
+		v := params[k]
+		if v == "" {
+			continue
+		}
+		buf.WriteString(k)
+		buf.WriteByte('=')
+		buf.WriteString(InterfaceToString(v))
+		buf.WriteByte('&')
 	}
-	return Sign2(params, apiKey, h)
+	return buf.String()[:buf.Len()-1]
 }
 
-// Sign2 微信支付签名.
+// Sign 支付宝签名支付签名.
 //  params: 待签名的参数集合
-//  apiKey: api密钥
+//  privateKey: api密钥
+func Sign(params map[string]interface{}, privateKey string, signType string) (sign string, err error) {
+	encodeSignParams := EncodeSignParams(params)
+	var (
+		block          *pem.Block
+		h              hash.Hash
+		key            *rsa.PrivateKey
+		hashs          crypto.Hash
+		encryptedBytes []byte
+	)
+
+	if block, _ = pem.Decode([]byte(privateKey)); block == nil {
+		return "", errors.New("pem.Decode：privateKey decode error")
+	}
+	if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
+		return
+	}
+	switch signType {
+	case "RSA":
+		h = sha1.New()
+		hashs = crypto.SHA1
+	case "RSA2":
+		h = sha256.New()
+		hashs = crypto.SHA256
+	default:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	}
+	if _, err = h.Write([]byte(encodeSignParams)); err != nil {
+		return
+	}
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, hashs, h.Sum(nil)); err != nil {
+		return
+	}
+	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
+	return
+}
+
+// Sign2 支付宝签名支付签名.
+//  params: 待签名的参数集合
+//  privateKey: api密钥
 //  h:      hash.Hash, 如果为 nil 则默认用 md5.New(), 特别注意 h 必须是 initial state.
-func Sign2(params map[string]interface{}, apiKey string, h hash.Hash) string {
+func Sign2(params map[string]interface{}, privateKey string, h hash.Hash) string {
 	if h == nil {
 		h = md5.New()
 	}
@@ -74,7 +130,7 @@ func Sign2(params map[string]interface{}, apiKey string, h hash.Hash) string {
 		bufw.WriteByte('&')
 	}
 	bufw.WriteString("key=")
-	bufw.WriteString(apiKey)
+	bufw.WriteString(privateKey)
 	bufw.Flush()
 
 	signature := make([]byte, hex.EncodedLen(h.Size()))
@@ -100,7 +156,7 @@ func InterfaceToString(v interface{}) string {
 }
 
 // jssdk 支付签名, signType 只支持 "MD5", "SHA1", 传入其他的值会 panic.
-func JsapiSign(appId, timeStamp, nonceStr, packageStr, signType string, apiKey string) string {
+func JsapiSign(appId, timeStamp, nonceStr, packageStr, signType string, privateKey string) string {
 	var h hash.Hash
 	switch signType {
 	case SignType_MD5:
@@ -128,7 +184,7 @@ func JsapiSign(appId, timeStamp, nonceStr, packageStr, signType string, apiKey s
 	bufw.WriteString("&timeStamp=")
 	bufw.WriteString(timeStamp)
 	bufw.WriteString("&key=")
-	bufw.WriteString(apiKey)
+	bufw.WriteString(privateKey)
 
 	bufw.Flush()
 	signature := make([]byte, hex.EncodedLen(h.Size()))
