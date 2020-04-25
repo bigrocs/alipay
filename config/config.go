@@ -3,7 +3,7 @@ package config
 type Config struct {
 	AppId           string `json:"app_id"`             //支付宝分配给开发者的应用ID
 	PrivateKey      string `json:"private_key"`        //私钥
-	AliPayPublicKey string `json:"ali_pay_public_key"` //支付宝弓腰
+	AliPayPublicKey string `json:"ali_pay_public_key"` //支付宝公钥
 	AppAuthToken    string `json:"app_auth_token"`     //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
 	Method          string `json:"method"`             //接口名称
 	Format          string `json:"format"`             //仅支持 JSON
