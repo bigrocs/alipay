@@ -21,4 +21,4 @@
 }
 ```
 - 具体参数参考支付开发文档
-- https://api.wechat.com/
+- https://opendocs.alipay.com/apis/api_1
