@@ -45,6 +45,11 @@ func (req *CommonResponse) GetHttpContentMap() (mxj.Map, error) {
 	return mxj.NewMapJson([]byte(req.json))
 }
 
+// GetSignDataMap 获取 MAP 数据
+func (req *CommonResponse) GetSignDataMap() (mxj.Map, error) {
+	return mxj.NewMapJson([]byte(req.GetSignData()))
+}
+
 // GetSignData 获取 SignData 数据
 func (req *CommonResponse) GetSignData() string {
 	return util.GetSignData(req.json)
