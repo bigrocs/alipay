@@ -18,6 +18,8 @@ import (
 	"encoding/json"
 
 	"github.com/clbanning/mxj"
+
+	"github.com/bigrocs/alipay/util"
 )
 
 // CommonResponse 公共回应
@@ -41,6 +43,20 @@ func (req *CommonResponse) GetHttpContentJson() string {
 // GetHttpContentMap 获取 MAP 数据
 func (req *CommonResponse) GetHttpContentMap() (mxj.Map, error) {
 	return mxj.NewMapJson([]byte(req.json))
+}
+
+// GetSignData 获取 SignData 数据
+func (req *CommonResponse) GetSignData() string {
+	return util.GetSignData(req.json)
+}
+
+// GetSign 获取 Sign 数据
+func (req *CommonResponse) GetSign() (string, error) {
+	mv, err := req.GetHttpContentMap()
+	if err != nil {
+		return "", err
+	}
+	return mv["sign"].(string), err
 }
 
 // SetHttpContent 设置请求信息

@@ -82,7 +82,7 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	} else {
 		params["version"] = "1.0"
 	}
-	sign, err := util.Sign(params, util.FormatPrivateKey(con.PrivateKey), params["sign_type"].(string)) // 开发签名
+	sign, err := util.Sign(params, con.PrivateKey, params["sign_type"].(string)) // 开发签名
 	if err != nil {
 		return err
 	}
