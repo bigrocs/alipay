@@ -182,6 +182,10 @@ func FormatURLParam(params map[string]interface{}) (urlParam string) {
 func GetSignData(str string) (signData string) {
 	indexStart := strings.Index(str, `":`)
 	indexEnd := strings.Index(str, `,"sign"`)
+	if indexEnd == -1 {
+		indexEnd = strings.Index(str, `}}`) + 1
+	}
+	fmt.Println(indexEnd)
 	signData = str[indexStart+2 : indexEnd]
 	return
 }

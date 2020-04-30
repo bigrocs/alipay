@@ -11,7 +11,7 @@ import (
 func TestPay(t *testing.T) {
 	// 创建连接
 	client := NewClient()
-	client.Config.AppId = "2016080900197401"
+	client.Config.AppId = ""
 	client.Config.Method = "alipay.trade.pay"
 	client.Config.PrivateKey = "MIIEogIBAAKCAQEAgc4wW8rlV9XvywSUJYsib7Csg6waonzGAISqZjDNqcDY2oYK/yTwHd9L1qH69fS6sTDY32R0oSFy9Pg22f040GAALECRTtcGkyBC1wsfQUICxhTASbOX1NzY4Hk//8+4dcNAGAVxeByLx52hKJyCMjDveTwZLRCijxsJ56kgcjulptA5LxsiImInxHyH5Ne+kgPcZUt4o5IbpcngpNZ2GVrASbPzV/5BiuBza883ey1c4Ps/dHjA7vNOjfJ/lpIxWLdmfrs1aHTkZdRsRcsvPWzBIYZ1mpUIlGF48S1hkptwA8BpNCR2Lhn1NO8fQkZkDxHxhBp5IFtp92bJ+PJ1iwIDAQABAoIBAAKhWvmBMwSEoUdL4HSiTSBWRCim5CNGw/xes9U+R+yYq8xByxdAeF0imTbQMXWqb94HT123e2WId/vey72/E9elGlvLMyaV1NxGWxRgdVGtNMEuynaz3O/DSeHCkzlrzCEWw8W41oPIkEyLNSjNgxXhR/j87sWrAKBFu/2lv7KQ23Me6rY5hiJq7RW+5z0deEqDLkPHmbM12lJoNAvmhX4Q715s1LivUsFP5KZkxKzGgh233S2BcGuTIYj036g1DI83GbG1cVSDW9gU+J43CKKOYu+dCqUpYBXvRoTFDySqTo6blv4iQD/rvDvqFJkNBsEHV2HNbLNK/fREpK43IwECgYEAwqRwjp5+osbYAtHSz+GEFoWgTozKSxYHmYc55xRvi9bE328Y4ZxyyXZiQCxFKwdmCQl/E2sm1MalRwKRRhDRnIgkIIS/wGuwJ7fWkeNjmO68MaExs/mmdn9eYQJA8knms/sB19qAFuPl9uSiY5CJfLxaTqqTzF1fM02ot3uM/7MCgYEAqrlvgXo0VPWNUxVdMRHXPaRk8kl+lFYb8qXJVU2X/vdShHJ4iPVeFUI/XTeOFWherHkH83u1BWhkLU+KvrYxyG0rxdINYI/priMKDjQ06tH2cQshbe1D66ku9TnM1kbiYN6xJpu3MJsre0v/hqgr+jQ9ucMCVkMLZRIb9i4ChskCgYBWJxLrDZxf0EOse9Mj0F322g6qtgaUVZvniMNIVPNKojVh8HrC4cys/4ldfjrfYNb5CQsGPVditspRNAG5UZh2AIx9GEUHlqLR8b03tb5P4tvJ2990GfxkVtwfdC/rDmrfHyshr8UiXJ1dOrXl/APfAj+2sinZOzr4KleTX0x5oQKBgFFEC8v6O8blS+xskvu0nlx9UH/0dAhwJMWQHRI56Uw4tlLNmoq3IZ3E9xyMQVn3YHmA80P3cuesFWNsJYM6fuAE930my69XUcjObQ7t0vKkF0cgIT2OX3JiCjQ420R0YXXzCyhxnvXIJx59wph6nNRw4aD3LrmZGGd4A09f/1vhAoGANc3hlyUk28qctgQQSi10/Ng5Fy4YIKW+g8WwNZ3voaeIyaSM/9jJ+teqqnJw8mcgGYo+YMqU+7IEwzrcjib4id2cu4MhlRswXKgaG2gSIUN7JEivjQisM6UUkXZtD91ZKx9JxTPVRYXqAjCcd6YPYt/C8PJTfGpQUFttX498P5g="
 	client.Config.AliPayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAruH561raPfR7mk3OFe/AKGsuir0oqfnwRekRtAo4EbliOlfSB2XAcQnyn6Wkc9bvRWkgGq6MJV2lVKRs114yyGz1MEhrjz8P1slp3KFnx/TwQgZSTGVH55BLNfB0cc+YA7/beTXHCOG4rQp8KPLURplkCMtuM/dQwS/6b/pF6dFHFhkZgXsHwtzK20jr6xVcT2Hk4tQGA1tfUSrskkj+CH61TSGfp5YkkfnieG3FEGfCjod0t37dCDKFNxD6EDOa10VqFtipLspo14PTDQmr3wQHCfZfmXqMdHtr2NMnIDYT4DCHhcUSI0VPMAohLbW6Y4Dm1JEkOyighLbrgY2qYQIDAQAB"
@@ -29,7 +29,7 @@ func TestPay(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetHttpContentMap()
-	ok, err := util.VerifySign(response.GetSignData(), req["sign"].(string), client.Config.AliPayPublicKey, "RSA2")
+	ok, err := util.VerifySign(response.GetSignData(), response.GetSign(), client.Config.AliPayPublicKey, "RSA2")
 	fmt.Println(req, ok, err)
 	t.Log(req, err, "|||")
 }
