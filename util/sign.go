@@ -185,7 +185,6 @@ func GetSignData(str string) (signData string) {
 	if indexEnd == -1 {
 		indexEnd = strings.Index(str, `}}`) + 1
 	}
-	fmt.Println(indexEnd)
 	signData = str[indexStart+2 : indexEnd]
 	return
 }

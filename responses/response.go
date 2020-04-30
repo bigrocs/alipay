@@ -42,11 +42,7 @@ func (req *CommonResponse) GetHttpContentJson() string {
 
 // GetHttpContentMap 获取 MAP 数据
 func (req *CommonResponse) GetHttpContentMap() (mxj.Map, error) {
-	mv := mxj.NewMapJson([]byte(req.json))
-	if mv["sign"] == nil {
-		mv["sign"] == ""
-	}
-	return mv
+	return mxj.NewMapJson([]byte(req.json))
 }
 
 // GetSignDataMap 获取 MAP 数据

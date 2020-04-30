@@ -29,8 +29,11 @@ func TestPay(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetHttpContentMap()
-	ok, err := util.VerifySign(response.GetSignData(), response.GetSign(), client.Config.AliPayPublicKey, "RSA2")
-	fmt.Println(req, ok, err)
+	if req["sign"] != nil {
+		ok, err := util.VerifySign(response.GetSignData(), req["sign"].(string), client.Config.AliPayPublicKey, "RSA2")
+		fmt.Println(req, ok, err)
+	}
+	fmt.Println(response.GetSignData())
 	t.Log(req, err, "|||")
 }
 func TestPayQuery(t *testing.T) {
@@ -49,9 +52,11 @@ func TestPayQuery(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetHttpContentMap()
-	ok, err := util.VerifySign(response.GetSignData(), req["sign"].(string), client.Config.AliPayPublicKey, "RSA2")
-	// fmt.Println(response, err)
-	fmt.Println(req, ok, err)
+	if req["sign"] != nil {
+		ok, err := util.VerifySign(response.GetSignData(), req["sign"].(string), client.Config.AliPayPublicKey, "RSA2")
+		fmt.Println(req, ok, err)
+	}
+	t.Log(response, err)
 }
 
 // map[
