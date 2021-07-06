@@ -61,9 +61,6 @@ func (req *CommonResponse) GetSign() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if mv["sign"] == nil {
-		return "", err
-	}
 	return mv["sign"].(string), err
 }
 
