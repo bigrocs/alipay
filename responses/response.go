@@ -61,7 +61,10 @@ func (req *CommonResponse) GetSign() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return mv["sign"].(string), err
+	if _, ok := mv["sign"]; ok { //去掉 xml 外层
+		return mv["sign"].(string), err
+	}
+	return "", err
 }
 
 // SetHttpContent 设置请求信息
