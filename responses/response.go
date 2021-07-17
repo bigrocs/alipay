@@ -107,16 +107,13 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 }
 
 // GetVerifySignDataMap 获取 GetVerifySignDataMap 校验后数据数据
-func (res *CommonResponse) GetVerifySignDataMap(signType string) (m mxj.Map, err error) {
-	if signType == "" {
-		signType = res.Config.SignType
-	}
+func (res *CommonResponse) GetVerifySignDataMap() (m mxj.Map, err error) {
 	r, err := res.GetHttpContentMap()
 	if err != nil {
 		return m, err
 	}
 	if r["sign"] != nil {
-		ok, err := util.VerifySign(res.GetSignData(), r["sign"].(string), res.Config.AliPayPublicKey, signType)
+		ok, err := util.VerifySign(res.GetSignData(), r["sign"].(string), res.Config.AliPayPublicKey, res.Config.SignType)
 		if err != nil {
 			return m, err
 		}

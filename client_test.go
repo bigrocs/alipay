@@ -31,7 +31,7 @@ func TestPay(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetHttpContentMap()
-	r, err := response.GetVerifySignDataMap("RSA2")
+	r, err := response.GetVerifySignDataMap()
 	fmt.Println("TestPay______", r, err)
 	t.Log(req, err, "|||")
 }
