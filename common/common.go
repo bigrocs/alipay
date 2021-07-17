@@ -54,7 +54,7 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	// 构建配置参数
 	params := map[string]interface{}{
 		"app_id":         con.AppId,
-		"method":         con.Method,
+		"method":         req.ApiName,
 		"sign_type":      con.SignType,
 		"app_auth_token": con.AppAuthToken,
 		"notify_url":     con.NotifyUrl,

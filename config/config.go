@@ -5,7 +5,6 @@ type Config struct {
 	PrivateKey      string `json:"private_key"`        //私钥
 	AliPayPublicKey string `json:"ali_pay_public_key"` //支付宝公钥
 	AppAuthToken    string `json:"app_auth_token"`     //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
-	Method          string `json:"method"`             //接口名称
 	Format          string `json:"format"`             //仅支持 JSON
 	Charset         string `json:"charset"`            //请求使用的编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
 	SignType        string `json:"sign_type"`          //商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用 RSA2

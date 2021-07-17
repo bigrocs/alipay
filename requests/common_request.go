@@ -2,6 +2,8 @@ package requests
 
 // CommonRequest 公共请求
 type CommonRequest struct {
+	Domain     string
+	ApiName    string
 	BizContent map[string]interface{}
 }
 

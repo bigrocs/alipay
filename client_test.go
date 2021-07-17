@@ -12,13 +12,13 @@ func TestPay(t *testing.T) {
 	// 创建连接
 	client := NewClient()
 	client.Config.AppId = os.Getenv("ALIPAY_APPID")
-	client.Config.Method = "alipay.trade.pay"
 	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
 	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
 	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
 	client.Config.Sandbox = false
 	// 配置参数
 	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.trade.pay"
 	request.BizContent = map[string]interface{}{
 		"subject":         "测试商品名称1",
 		"scene":           "bar_code",

@@ -21,6 +21,7 @@ import (
 	"github.com/clbanning/mxj"
 
 	"github.com/bigrocs/alipay/config"
+	"github.com/bigrocs/alipay/requests"
 	"github.com/bigrocs/alipay/util"
 )
 
@@ -34,6 +35,7 @@ const (
 // CommonResponse 公共回应
 type CommonResponse struct {
 	Config      *config.Config
+	Request     *requests.CommonRequest
 	httpContent []byte
 	json        string
 }
@@ -41,9 +43,10 @@ type CommonResponse struct {
 type Map *mxj.Map
 
 // NewCommonResponse 创建新的请求返回
-func NewCommonResponse(config *config.Config) (response *CommonResponse) {
+func NewCommonResponse(config *config.Config, request *requests.CommonRequest) (response *CommonResponse) {
 	c := &CommonResponse{}
 	c.Config = config
+	c.Request = request
 	return c
 }
 
@@ -71,7 +74,7 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
-		if res.Config.Method == "alipay.trade.pay" {
+		if res.Request.ApiName == "alipay.trade.pay" {
 			data["stauts"] = SUCCESS
 		}
 		switch content["trade_status"] {
