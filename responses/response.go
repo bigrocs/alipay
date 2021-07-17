@@ -85,16 +85,20 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 			data["stauts"] = SUCCESS
 		}
 	} else {
+		data["return_code"] = "FAIL"
+		// 系列关闭订单属于正常
 		if content["code"] == "10003" { // 下单等待用户付款
+			data["return_code"] = SUCCESS
 			data["stauts"] = USERPAYING
 		}
 		if content["sub_code"] == "ACQ.TRADE_HAS_CLOSE " {
+			data["return_code"] = SUCCESS
 			data["stauts"] = CLOSED
 		}
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST " {
+			data["return_code"] = SUCCESS
 			data["stauts"] = CLOSED
 		}
-		data["return_code"] = "FAIL"
 	}
 	return data, err
 }
