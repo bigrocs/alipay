@@ -69,7 +69,7 @@ func TestPayRefund(t *testing.T) {
 	request.ApiName = "alipay.trade.refund"
 	request.BizContent = map[string]interface{}{
 		"out_trade_no":   "GZ2020010117534314524",
-		"out_request_no": "GZ2020010117534314524_T1",
+		"out_request_no": "GZ2020010117534314524_T3",
 		"refund_amount":  0.01,
 	}
 	// 请求
@@ -94,7 +94,7 @@ func TestPayRefundQuery(t *testing.T) {
 		"out_trade_no":   "GZ2020010117534314524",
 		"out_request_no": "GZ2020010117534314524_T1",
 		"query_options": []string{
-			"send_back_fee",
+			"refund_royaltys",
 		},
 	}
 	// 请求

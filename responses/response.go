@@ -61,91 +61,6 @@ func (res *CommonResponse) GetHttpContentMap() (mxj.Map, error) {
 	return mxj.NewMapJson([]byte(res.json))
 }
 
-// data{
-// 	channel			//	通道内容		alipay、wechat、icbc
-// 	content			//	第三方返回内容 	{}
-// 	return_code		//	返回代码 		SUCCESS
-// 	return_msg		//	返回消息		支付失败
-// 	stauts			//	下单状态 		【SUCCESS成功、CLOSED关闭、USERPAYING等待用户付款、WAIT系统繁忙稍后查询】
-// 	total_fee		//  订单金额		88
-// 	refund_fee 		//  退款金额		10
-// 	trade_no 		// 	渠道交易编号 	2013112011001004330000121536
-// 	out_trade_no	// 	商户订单号		T1024501231476
-// 	sub_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
-// 	buyer_logon_id  //	支付宝账号		158****1562
-//  buyer_user_id  //	买家在支付宝的用户id	2088101117955611
-// 	time_end		//  支付完成时间	20141030133525
-// }
-
-// GetSignDataMap 获取 MAP 数据
-func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
-	data := mxj.New()
-	content, err := mxj.NewMapJson([]byte(res.GetSignData()))
-	data["channel"] = "alipay" //渠道
-	data["content"] = content
-	data["return_code"] = "" // 返回代码
-	data["return_msg"] = ""  // 返回消息
-	data["stauts"] = ""      // 状态
-
-	// 下单
-	// 查询 交易状态：WAIT_BUYER_PAY（交易创建，等待买家付款）、TRADE_CLOSED（未付款交易超时关闭，或支付完成后全额退款）、TRADE_SUCCESS（交易支付成功）、TRADE_FINISHED（交易结束，不可退款）
-	if sub_msg, ok := content["sub_msg"]; ok {
-		data["return_msg"] = sub_msg
-	} else {
-		data["return_msg"] = content["msg"]
-	}
-	if content["code"] == "10000" {
-		data["return_code"] = SUCCESS
-		if res.Request.ApiName == "alipay.trade.pay" {
-			data["stauts"] = SUCCESS
-		}
-		switch content["trade_status"] {
-		case "TRADE_CLOSED":
-			data["stauts"] = CLOSED
-		case "WAIT_BUYER_PAY":
-			data["stauts"] = USERPAYING
-		case "TRADE_SUCCESS":
-			data["stauts"] = SUCCESS
-		case "TRADE_FINISHED":
-			data["stauts"] = SUCCESS
-		}
-	} else {
-		data["return_code"] = "FAIL"
-		// 系列关闭订单属于正常
-		if content["code"] == "10003" { // 下单等待用户付款
-			data["return_code"] = SUCCESS
-			data["stauts"] = USERPAYING
-		}
-		if content["sub_code"] == "ACQ.TRADE_HAS_SUCCESS" {
-			data["return_code"] = SUCCESS
-			data["stauts"] = SUCCESS
-		}
-		if content["sub_code"] == "ACQ.TRADE_HAS_CLOSE" {
-			data["return_code"] = SUCCESS
-			data["stauts"] = CLOSED
-		}
-		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
-			data["return_code"] = SUCCESS
-			data["stauts"] = CLOSED
-		}
-	}
-	data["total_fee"] = content["total_amount"]
-	data["refund_fee"] = content["refund_fee"]
-	if f, ok := content["refund_amount"]; ok {
-		data["refund_fee"] = f
-	}
-	data["trade_no"] = content["trade_no"]
-	data["out_trade_no"] = content["out_trade_no"]
-	data["buyer_logon_id"] = content["buyer_logon_id"]
-	data["buyer_user_id"] = content["buyer_user_id"]
-	if t, ok := content["gmt_payment"]; ok {
-		timeFormat := "2006-01-02 15:04:05"
-		tt, _ := time.ParseInLocation(timeFormat, t.(string), time.Local)
-		data["time_end"] = tt.Format("20060102150405")
-	}
-	return data, err
-}
-
 // GetVerifySignDataMap 获取 GetVerifySignDataMap 校验后数据数据
 func (res *CommonResponse) GetVerifySignDataMap() (m mxj.Map, err error) {
 	r, err := res.GetHttpContentMap()
@@ -200,4 +115,145 @@ func (res *CommonResponse) SetHttpContent(httpContent []byte, dataType string) {
 	case "string":
 		res.json = string(res.httpContent)
 	}
+}
+
+// data{
+// 	channel			//	通道内容		alipay、wechat、icbc
+// 	content			//	第三方返回内容 	{}
+// 	return_code		//	返回代码 		SUCCESS
+// 	return_msg		//	返回消息		支付失败
+// 	stauts			//	下单状态 		【SUCCESS成功、CLOSED关闭、USERPAYING等待用户付款、WAIT系统繁忙稍后查询】
+// 	total_fee		//  订单金额		88
+// 	refund_fee 		//  退款金额		10
+// 	trade_no 		// 	渠道交易编号 	2013112011001004330000121536
+// 	out_trade_no	// 	商户订单号		T1024501231476
+// 	sub_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
+// 	buyer_logon_id  //	支付宝账号		158****1562
+//  buyer_user_id  //	买家在支付宝的用户id	2088101117955611
+// 	time_end		//  支付完成时间	20141030133525
+// }
+// GetSignDataMap 获取 MAP 数据
+func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
+	data := mxj.New()
+	content, err := mxj.NewMapJson([]byte(res.GetSignData()))
+	if err != nil {
+		return nil, err
+	}
+	if res.Request.ApiName == "alipay.trade.pay" {
+		data = res.handerAlipayTradePay(content)
+	}
+	if res.Request.ApiName == "alipay.trade.query" {
+		data = res.handerAlipayTradeQuery(content)
+	}
+	if res.Request.ApiName == "alipay.trade.refund" {
+		data = res.handerAlipayTradeRefund(content)
+	}
+	if res.Request.ApiName == "alipay.trade.fastpay.refund.query" {
+		data = res.handerAlipayTradeRefundQuery(content)
+	}
+
+	data["channel"] = "alipay" //渠道
+	// data["content"] = content
+	return data, err
+}
+
+func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	data["stauts"] = "" // 状态
+	if sub_msg, ok := content["sub_msg"]; ok {
+		data["return_msg"] = sub_msg
+	} else {
+		data["return_msg"] = content["msg"]
+	}
+	if content["code"] == "10000" {
+		data["return_code"] = SUCCESS
+		data["stauts"] = SUCCESS
+		data["total_fee"] = content["total_amount"]
+		data["trade_no"] = content["trade_no"]
+		data["out_trade_no"] = content["out_trade_no"]
+		data["buyer_logon_id"] = content["buyer_logon_id"]
+		data["buyer_user_id"] = content["buyer_user_id"]
+		if t, ok := content["gmt_payment"]; ok {
+			timeFormat := "2006-01-02 15:04:05"
+			tt, _ := time.ParseInLocation(timeFormat, t.(string), time.Local)
+			data["time_end"] = tt.Format("20060102150405")
+		}
+	} else {
+		data["return_code"] = "FAIL"
+	}
+	return data
+}
+
+func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	data["stauts"] = "" // 状态
+	if sub_msg, ok := content["sub_msg"]; ok {
+		data["return_msg"] = sub_msg
+	} else {
+		data["return_msg"] = content["msg"]
+	}
+	if content["code"] == "10000" {
+		data["return_code"] = SUCCESS
+		switch content["trade_status"] {
+		case "TRADE_CLOSED":
+			data["stauts"] = CLOSED
+		case "WAIT_BUYER_PAY":
+			data["stauts"] = USERPAYING
+		case "TRADE_SUCCESS":
+			data["stauts"] = SUCCESS
+		case "TRADE_FINISHED":
+			data["stauts"] = SUCCESS
+		}
+		data["total_fee"] = content["total_amount"]
+		data["trade_no"] = content["trade_no"]
+		data["out_trade_no"] = content["out_trade_no"]
+		data["buyer_logon_id"] = content["buyer_logon_id"]
+		data["buyer_user_id"] = content["buyer_user_id"]
+	} else {
+		data["return_code"] = "FAIL"
+		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
+			data["return_code"] = SUCCESS
+			data["stauts"] = CLOSED
+		}
+	}
+	return data
+}
+
+func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	if sub_msg, ok := content["sub_msg"]; ok {
+		data["return_msg"] = sub_msg
+	} else {
+		data["return_msg"] = content["msg"]
+	}
+	if content["code"] == "10000" {
+		data["return_code"] = SUCCESS
+		data["refund_fee"] = content["refund_fee"]
+		data["trade_no"] = content["trade_no"]
+		data["out_trade_no"] = content["out_trade_no"]
+		data["buyer_logon_id"] = content["buyer_logon_id"]
+		data["buyer_user_id"] = content["buyer_user_id"]
+	} else {
+		data["return_code"] = "FAIL"
+	}
+	return data
+}
+
+func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	if sub_msg, ok := content["sub_msg"]; ok {
+		data["return_msg"] = sub_msg
+	} else {
+		data["return_msg"] = content["msg"]
+	}
+	if content["code"] == "10000" {
+		data["return_code"] = SUCCESS
+	} else {
+		data["return_code"] = "FAIL"
+	}
+	data["total_fee"] = content["total_amount"]
+	data["refund_fee"] = content["refund_amount"]
+	data["trade_no"] = content["trade_no"]
+	data["out_trade_no"] = content["out_trade_no"]
+	return data
 }
