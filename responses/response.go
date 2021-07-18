@@ -128,8 +128,8 @@ func (res *CommonResponse) SetHttpContent(httpContent []byte, dataType string) {
 // 	trade_no 		// 	渠道交易编号 	2013112011001004330000121536
 // 	out_trade_no	// 	商户订单号		T1024501231476
 // 	sub_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
-// 	buyer_logon_id  //	支付宝账号		158****1562
-//  buyer_user_id  //	买家在支付宝的用户id	2088101117955611
+// 	alipay_buyer_logon_id  //	支付宝账号		158****1562
+//  alipay_buyer_user_id  //	买家在支付宝的用户id	2088101117955611
 // 	time_end		//  支付完成时间	20141030133525
 // }
 // GetSignDataMap 获取 MAP 数据
@@ -171,8 +171,8 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
-		data["buyer_logon_id"] = content["buyer_logon_id"]
-		data["buyer_user_id"] = content["buyer_user_id"]
+		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
+		data["alipay_buyer_user_id"] = content["buyer_user_id"]
 		if t, ok := content["gmt_payment"]; ok {
 			timeFormat := "2006-01-02 15:04:05"
 			tt, _ := time.ParseInLocation(timeFormat, t.(string), time.Local)
@@ -207,8 +207,8 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
-		data["buyer_logon_id"] = content["buyer_logon_id"]
-		data["buyer_user_id"] = content["buyer_user_id"]
+		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
+		data["alipay_buyer_user_id"] = content["buyer_user_id"]
 	} else {
 		data["return_code"] = "FAIL"
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
@@ -231,8 +231,8 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 		data["refund_fee"] = content["refund_fee"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
-		data["buyer_logon_id"] = content["buyer_logon_id"]
-		data["buyer_user_id"] = content["buyer_user_id"]
+		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
+		data["alipay_buyer_user_id"] = content["buyer_user_id"]
 	} else {
 		data["return_code"] = "FAIL"
 	}
