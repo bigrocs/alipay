@@ -22,42 +22,87 @@ func TestPay(t *testing.T) {
 	request.BizContent = map[string]interface{}{
 		"subject":         "测试商品名称1",
 		"scene":           "bar_code",
-		"auth_code":       "282570666284142748",
-		"out_trade_no":    "GZ2020010117534314522",
-		"total_amount":    100000,
+		"auth_code":       "288064812778791163",
+		"out_trade_no":    "GZ2020010117534314524",
+		"total_amount":    0.02,
 		"timeout_express": "2m",
 		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("ALIPAY_SYS_SERVICE_PROVIDER_ID")},
 	}
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
-	req, err := response.GetHttpContentMap()
-	r, err := response.GetVerifySignDataMap()
-	fmt.Println("TestPay______", r, err)
+	req, err := response.GetVerifySignDataMap()
+	fmt.Println("TestPay______", req, err)
 	t.Log(req, err, "|||")
 }
 
-// func TestPayQuery(t *testing.T) {
-// 	// 创建连接
-// 	client := NewClient()
-// 	client.Config.AppId = "2016080900197401"
-// 	client.Config.Method = "alipay.trade.query"
-// 	client.Config.PrivateKey = "MIIEogIBAAKCAQEAgc4wW8rlV9XvywSUJYsib7Csg6waonzGAISqZjDNqcDY2oYK/yTwHd9L1qH69fS6sTDY32R0oSFy9Pg22f040GAALECRTtcGkyBC1wsfQUICxhTASbOX1NzY4Hk//8+4dcNAGAVxeByLx52hKJyCMjDveTwZLRCijxsJ56kgcjulptA5LxsiImInxHyH5Ne+kgPcZUt4o5IbpcngpNZ2GVrASbPzV/5BiuBza883ey1c4Ps/dHjA7vNOjfJ/lpIxWLdmfrs1aHTkZdRsRcsvPWzBIYZ1mpUIlGF48S1hkptwA8BpNCR2Lhn1NO8fQkZkDxHxhBp5IFtp92bJ+PJ1iwIDAQABAoIBAAKhWvmBMwSEoUdL4HSiTSBWRCim5CNGw/xes9U+R+yYq8xByxdAeF0imTbQMXWqb94HT123e2WId/vey72/E9elGlvLMyaV1NxGWxRgdVGtNMEuynaz3O/DSeHCkzlrzCEWw8W41oPIkEyLNSjNgxXhR/j87sWrAKBFu/2lv7KQ23Me6rY5hiJq7RW+5z0deEqDLkPHmbM12lJoNAvmhX4Q715s1LivUsFP5KZkxKzGgh233S2BcGuTIYj036g1DI83GbG1cVSDW9gU+J43CKKOYu+dCqUpYBXvRoTFDySqTo6blv4iQD/rvDvqFJkNBsEHV2HNbLNK/fREpK43IwECgYEAwqRwjp5+osbYAtHSz+GEFoWgTozKSxYHmYc55xRvi9bE328Y4ZxyyXZiQCxFKwdmCQl/E2sm1MalRwKRRhDRnIgkIIS/wGuwJ7fWkeNjmO68MaExs/mmdn9eYQJA8knms/sB19qAFuPl9uSiY5CJfLxaTqqTzF1fM02ot3uM/7MCgYEAqrlvgXo0VPWNUxVdMRHXPaRk8kl+lFYb8qXJVU2X/vdShHJ4iPVeFUI/XTeOFWherHkH83u1BWhkLU+KvrYxyG0rxdINYI/priMKDjQ06tH2cQshbe1D66ku9TnM1kbiYN6xJpu3MJsre0v/hqgr+jQ9ucMCVkMLZRIb9i4ChskCgYBWJxLrDZxf0EOse9Mj0F322g6qtgaUVZvniMNIVPNKojVh8HrC4cys/4ldfjrfYNb5CQsGPVditspRNAG5UZh2AIx9GEUHlqLR8b03tb5P4tvJ2990GfxkVtwfdC/rDmrfHyshr8UiXJ1dOrXl/APfAj+2sinZOzr4KleTX0x5oQKBgFFEC8v6O8blS+xskvu0nlx9UH/0dAhwJMWQHRI56Uw4tlLNmoq3IZ3E9xyMQVn3YHmA80P3cuesFWNsJYM6fuAE930my69XUcjObQ7t0vKkF0cgIT2OX3JiCjQ420R0YXXzCyhxnvXIJx59wph6nNRw4aD3LrmZGGd4A09f/1vhAoGANc3hlyUk28qctgQQSi10/Ng5Fy4YIKW+g8WwNZ3voaeIyaSM/9jJ+teqqnJw8mcgGYo+YMqU+7IEwzrcjib4id2cu4MhlRswXKgaG2gSIUN7JEivjQisM6UUkXZtD91ZKx9JxTPVRYXqAjCcd6YPYt/C8PJTfGpQUFttX498P5g="
-// 	client.Config.AliPayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAruH561raPfR7mk3OFe/AKGsuir0oqfnwRekRtAo4EbliOlfSB2XAcQnyn6Wkc9bvRWkgGq6MJV2lVKRs114yyGz1MEhrjz8P1slp3KFnx/TwQgZSTGVH55BLNfB0cc+YA7/beTXHCOG4rQp8KPLURplkCMtuM/dQwS/6b/pF6dFHFhkZgXsHwtzK20jr6xVcT2Hk4tQGA1tfUSrskkj+CH61TSGfp5YkkfnieG3FEGfCjod0t37dCDKFNxD6EDOa10VqFtipLspo14PTDQmr3wQHCfZfmXqMdHtr2NMnIDYT4DCHhcUSI0VPMAohLbW6Y4Dm1JEkOyighLbrgY2qYQIDAQAB"
-// 	client.Config.Sandbox = true
-// 	// 配置参数
-// 	request := requests.NewCommonRequest()
-// 	request.BizContent = map[string]interface{}{
-// 		"out_trade_no": "GZ2020010117534314513",
-// 	}
-// 	// 请求
-// 	response, err := client.ProcessCommonRequest(request)
-// 	req, err := response.GetHttpContentMap()
-// 	if req["sign"] != nil {
-// 		ok, err := util.VerifySign(response.GetSignData(), req["sign"].(string), client.Config.AliPayPublicKey, "RSA2")
-// 		fmt.Println(req, ok, err)
-// 	}
-// 	t.Log(response, err)
-// }
+func TestPayQuery(t *testing.T) {
+	// 创建连接
+	client := NewClient()
+	client.Config.AppId = os.Getenv("ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.Sandbox = false
+	// 配置参数
+	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.trade.query"
+	request.BizContent = map[string]interface{}{
+		"out_trade_no": "GZ2020010117534314524",
+	}
+	// 请求
+	response, err := client.ProcessCommonRequest(request)
+	req, err := response.GetVerifySignDataMap()
+	fmt.Println("TestPayQuery______", req, err)
+	t.Log(req, err, "|||")
+}
+
+func TestPayRefund(t *testing.T) {
+	// 创建连接
+	client := NewClient()
+	client.Config.AppId = os.Getenv("ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.Sandbox = false
+	// 配置参数
+	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.trade.refund"
+	request.BizContent = map[string]interface{}{
+		"out_trade_no":   "GZ2020010117534314524",
+		"out_request_no": "GZ2020010117534314524_T1",
+		"refund_amount":  0.01,
+	}
+	// 请求
+	response, err := client.ProcessCommonRequest(request)
+	req, err := response.GetVerifySignDataMap()
+	fmt.Println("TestPayRefund______", req, err)
+	t.Log(req, err, "|||")
+}
+
+func TestPayRefundQuery(t *testing.T) {
+	// 创建连接
+	client := NewClient()
+	client.Config.AppId = os.Getenv("ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.Sandbox = false
+	// 配置参数
+	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.trade.fastpay.refund.query"
+	request.BizContent = map[string]interface{}{
+		"out_trade_no":   "GZ2020010117534314524",
+		"out_request_no": "GZ2020010117534314524_T1",
+		"query_options": []string{
+			"send_back_fee",
+		},
+	}
+	// 请求
+	response, err := client.ProcessCommonRequest(request)
+	req, err := response.GetVerifySignDataMap()
+	fmt.Println("TestPayRefundQuery______", req, err)
+	t.Log(req, err, "|||")
+}
 
 // map[
 // 	alipay_trade_pay_response:
