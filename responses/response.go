@@ -127,7 +127,9 @@ func (res *CommonResponse) SetHttpContent(httpContent []byte, dataType string) {
 // 	refund_fee 		//  退款金额		10
 // 	trade_no 		// 	渠道交易编号 	2013112011001004330000121536
 // 	out_trade_no	// 	商户订单号		T1024501231476
-// 	sub_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
+//  out_refund_no	//  商户退款单号	T1024501231476_T
+// 	wechat_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
+//  wechat_is_subscribe 	//  微信是否微信关注公众号
 // 	alipay_buyer_logon_id  //	支付宝账号		158****1562
 //  alipay_buyer_user_id  //	买家在支付宝的用户id	2088101117955611
 // 	time_end		//  支付完成时间	20141030133525
@@ -231,6 +233,7 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 		data["refund_fee"] = content["refund_fee"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
+		data["out_refund_no"] = content["out_request_no"]
 		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
 		data["alipay_buyer_user_id"] = content["buyer_user_id"]
 	} else {
@@ -255,5 +258,6 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 	data["refund_fee"] = content["refund_amount"]
 	data["trade_no"] = content["trade_no"]
 	data["out_trade_no"] = content["out_trade_no"]
+	data["out_refund_no"] = content["out_request_no"]
 	return data
 }

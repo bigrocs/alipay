@@ -22,8 +22,8 @@ func TestPay(t *testing.T) {
 	request.BizContent = map[string]interface{}{
 		"subject":         "测试商品名称1",
 		"scene":           "bar_code",
-		"auth_code":       "288064812778791163",
-		"out_trade_no":    "GZ2020010117534314524",
+		"auth_code":       "280528574232947539",
+		"out_trade_no":    "GZ2020010117534314525",
 		"total_amount":    0.02,
 		"timeout_express": "2m",
 		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("ALIPAY_SYS_SERVICE_PROVIDER_ID")},
@@ -47,7 +47,7 @@ func TestPayQuery(t *testing.T) {
 	request := requests.NewCommonRequest()
 	request.ApiName = "alipay.trade.query"
 	request.BizContent = map[string]interface{}{
-		"out_trade_no": "GZ2020010117534314524",
+		"out_trade_no": "GZ2020010117534314525",
 	}
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
@@ -68,8 +68,8 @@ func TestPayRefund(t *testing.T) {
 	request := requests.NewCommonRequest()
 	request.ApiName = "alipay.trade.refund"
 	request.BizContent = map[string]interface{}{
-		"out_trade_no":   "GZ2020010117534314524",
-		"out_request_no": "GZ2020010117534314524_T3",
+		"out_trade_no":   "GZ2020010117534314525",
+		"out_request_no": "GZ2020010117534314525_T2",
 		"refund_amount":  0.01,
 	}
 	// 请求
@@ -91,8 +91,8 @@ func TestPayRefundQuery(t *testing.T) {
 	request := requests.NewCommonRequest()
 	request.ApiName = "alipay.trade.fastpay.refund.query"
 	request.BizContent = map[string]interface{}{
-		"out_trade_no":   "GZ2020010117534314524",
-		"out_request_no": "GZ2020010117534314524_T1",
+		"out_trade_no":   "GZ2020010117534314525",
+		"out_request_no": "GZ2020010117534314525_T2",
 		"query_options": []string{
 			"refund_royaltys",
 		},
