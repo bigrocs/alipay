@@ -65,18 +65,18 @@ func (res *CommonResponse) GetHttpContentMap() (mxj.Map, error) {
 func (res *CommonResponse) GetVerifySignDataMap() (m mxj.Map, err error) {
 	r, err := res.GetHttpContentMap()
 	if err != nil {
-		return m, err
+		return r, err
 	}
 	if r["sign"] != nil {
 		ok, err := util.VerifySign(res.GetSignData(), r["sign"].(string), res.Config.AliPayPublicKey, res.Config.SignType)
 		if err != nil {
-			return m, err
+			return r, err
 		}
 		if ok {
 			return res.GetSignDataMap()
 		}
 	} else {
-		return m, errors.New("sign is not")
+		return r, errors.New("sign is not")
 	}
 	return
 }
