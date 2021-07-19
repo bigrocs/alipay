@@ -30,7 +30,7 @@ const (
 	CLOSED     = "CLOSED"     // -1 订单关闭
 	USERPAYING = "USERPAYING" // 0	订单支付中
 	SUCCESS    = "SUCCESS"    // 1	订单支付成功
-	WAIT       = "WAIT"       // 2	系统执行中请等待
+	WAITING    = "WAITING"    // 2	系统执行中请等待
 )
 
 // CommonResponse 公共回应
@@ -122,7 +122,7 @@ func (res *CommonResponse) SetHttpContent(httpContent []byte, dataType string) {
 // 	content			//	第三方返回内容 	{}
 // 	return_code		//	返回代码 		SUCCESS
 // 	return_msg		//	返回消息		支付失败
-// 	stauts			//	下单状态 		【SUCCESS成功、CLOSED关闭、USERPAYING等待用户付款、WAIT系统繁忙稍后查询】
+// 	status			//	下单状态 		【SUCCESS成功、CLOSED关闭、USERPAYING等待用户付款、WAITING系统繁忙稍后查询】
 // 	total_fee		//  订单金额		88
 // 	refund_fee 		//  退款金额		10
 // 	trade_no 		// 	渠道交易编号 	2013112011001004330000121536
@@ -161,7 +161,7 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 
 func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 	data := mxj.New()
-	data["stauts"] = "" // 状态
+	data["status"] = "" // 状态
 	if sub_msg, ok := content["sub_msg"]; ok {
 		data["return_msg"] = sub_msg
 	} else {
@@ -169,7 +169,7 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
-		data["stauts"] = SUCCESS
+		data["status"] = SUCCESS
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
@@ -188,7 +188,7 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 
 func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 	data := mxj.New()
-	data["stauts"] = "" // 状态
+	data["status"] = "" // 状态
 	if sub_msg, ok := content["sub_msg"]; ok {
 		data["return_msg"] = sub_msg
 	} else {
@@ -198,13 +198,13 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		data["return_code"] = SUCCESS
 		switch content["trade_status"] {
 		case "TRADE_CLOSED":
-			data["stauts"] = CLOSED
+			data["status"] = CLOSED
 		case "WAIT_BUYER_PAY":
-			data["stauts"] = USERPAYING
+			data["status"] = USERPAYING
 		case "TRADE_SUCCESS":
-			data["stauts"] = SUCCESS
+			data["status"] = SUCCESS
 		case "TRADE_FINISHED":
-			data["stauts"] = SUCCESS
+			data["status"] = SUCCESS
 		}
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
@@ -215,7 +215,7 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		data["return_code"] = "FAIL"
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
 			data["return_code"] = SUCCESS
-			data["stauts"] = CLOSED
+			data["status"] = CLOSED
 		}
 	}
 	return data
@@ -234,8 +234,6 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["out_refund_no"] = content["out_request_no"]
-		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
-		data["alipay_buyer_user_id"] = content["buyer_user_id"]
 	} else {
 		data["return_code"] = "FAIL"
 	}
