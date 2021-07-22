@@ -11,10 +11,10 @@ import (
 func TestPay(t *testing.T) {
 	// 创建连接
 	client := NewClient()
-	client.Config.AppId = os.Getenv("ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
 	client.Config.Sandbox = false
 	// 配置参数
 	request := requests.NewCommonRequest()
@@ -26,7 +26,7 @@ func TestPay(t *testing.T) {
 		"out_trade_no":    "GZ2020010117534314525",
 		"total_amount":    0.02,
 		"timeout_express": "2m",
-		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("ALIPAY_SYS_SERVICE_PROVIDER_ID")},
+		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("PAY_ALIPAY_SYS_SERVICE_PROVIDER_ID")},
 	}
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
@@ -38,10 +38,10 @@ func TestPay(t *testing.T) {
 func TestPayQuery(t *testing.T) {
 	// 创建连接
 	client := NewClient()
-	client.Config.AppId = os.Getenv("ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
 	client.Config.Sandbox = false
 	// 配置参数
 	request := requests.NewCommonRequest()
@@ -59,10 +59,10 @@ func TestPayQuery(t *testing.T) {
 func TestPayRefund(t *testing.T) {
 	// 创建连接
 	client := NewClient()
-	client.Config.AppId = os.Getenv("ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
 	client.Config.Sandbox = false
 	// 配置参数
 	request := requests.NewCommonRequest()
@@ -82,10 +82,10 @@ func TestPayRefund(t *testing.T) {
 func TestPayRefundQuery(t *testing.T) {
 	// 创建连接
 	client := NewClient()
-	client.Config.AppId = os.Getenv("ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("ALIPAY_APP_AUTH_TOKEN")
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
 	client.Config.Sandbox = false
 	// 配置参数
 	request := requests.NewCommonRequest()
