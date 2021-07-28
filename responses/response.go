@@ -248,14 +248,20 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 		data["return_msg"] = content["msg"]
 	}
 	if content["code"] == "10000" {
+		if refund_amount, ok := content["refund_amount"]; ok {
+			data["total_fee"] = content["total_amount"]
+			data["refund_fee"] = refund_amount
+			data["trade_no"] = content["trade_no"]
+			data["out_trade_no"] = content["out_trade_no"]
+			data["out_refund_no"] = content["out_request_no"]
+			data["status"] = SUCCESS
+		}
 		data["return_code"] = SUCCESS
 	} else {
+		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" || content["sub_code"] == "TRADE_NOT_EXIST" {
+			data["status"] = CLOSED
+		}
 		data["return_code"] = "FAIL"
 	}
-	data["total_fee"] = content["total_amount"]
-	data["refund_fee"] = content["refund_amount"]
-	data["trade_no"] = content["trade_no"]
-	data["out_trade_no"] = content["out_trade_no"]
-	data["out_refund_no"] = content["out_request_no"]
 	return data
 }
