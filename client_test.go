@@ -100,7 +100,30 @@ func TestPayRefundQuery(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetVerifySignDataMap()
-	fmt.Println("TestPayRefundQuery______", req, err)
+	// fmt.Println("TestPayRefundQuery______", req, err)
+	t.Log(req, err, "|||")
+}
+
+func TestQueryUserID(t *testing.T) {
+	// 创建连接
+	client := NewClient()
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	client.Config.Sandbox = false
+	// 配置参数
+	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.user.twostage.common.use"
+	request.BizContent = map[string]interface{}{
+		"sence_no":   "20170718101175343",
+		"dynamic_id": "286861260475412123",
+		"pay_pid":    "2088702093900999",
+	}
+	// 请求
+	response, err := client.ProcessCommonRequest(request)
+	req, err := response.GetVerifySignDataMap()
+	fmt.Println("TestQueryUserID______", req, err)
 	t.Log(req, err, "|||")
 }
 

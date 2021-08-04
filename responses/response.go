@@ -130,8 +130,8 @@ func (res *CommonResponse) SetHttpContent(httpContent []byte, dataType string) {
 //  out_refund_no	//  商户退款单号	T1024501231476_T
 // 	wechat_open_id		//  微信openid		[oUpF8uN95-Ptaags6E_roPHg7AG
 //  wechat_is_subscribe 	//  微信是否微信关注公众号
-// 	alipay_buyer_logon_id  //	支付宝账号		158****1562
-//  alipay_buyer_user_id  //	买家在支付宝的用户id	2088101117955611
+// 	alipay_logon_id  //	支付宝账号		158****1562
+//  alipay_user_id  //	买家在支付宝的用户id	2088101117955611
 // 	time_end		//  支付完成时间	20141030133525
 // }
 // GetSignDataMap 获取 MAP 数据
@@ -173,8 +173,8 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
-		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
-		data["alipay_buyer_user_id"] = content["buyer_user_id"]
+		data["alipay_logon_id"] = content["buyer_logon_id"]
+		data["alipay_user_id"] = content["buyer_user_id"]
 		if t, ok := content["gmt_payment"]; ok {
 			timeFormat := "2006-01-02 15:04:05"
 			tt, _ := time.ParseInLocation(timeFormat, t.(string), time.Local)
@@ -209,8 +209,8 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		data["total_fee"] = content["total_amount"]
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
-		data["alipay_buyer_logon_id"] = content["buyer_logon_id"]
-		data["alipay_buyer_user_id"] = content["buyer_user_id"]
+		data["alipay_logon_id"] = content["buyer_logon_id"]
+		data["alipay_user_id"] = content["buyer_user_id"]
 	} else {
 		data["return_code"] = "FAIL"
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
