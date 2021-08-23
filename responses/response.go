@@ -211,6 +211,11 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		data["out_trade_no"] = content["out_trade_no"]
 		data["alipay_logon_id"] = content["buyer_logon_id"]
 		data["alipay_user_id"] = content["buyer_user_id"]
+		if t, ok := content["send_pay_date"]; ok {
+			timeFormat := "2006-01-02 15:04:05"
+			tt, _ := time.ParseInLocation(timeFormat, t.(string), time.Local)
+			data["time_end"] = tt.Format("20060102150405")
+		}
 	} else {
 		data["return_code"] = "FAIL"
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" {
