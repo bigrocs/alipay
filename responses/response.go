@@ -263,10 +263,11 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 		}
 		data["return_code"] = SUCCESS
 	} else {
+		data["return_code"] = "FAIL"
 		if content["sub_code"] == "ACQ.TRADE_NOT_EXIST" || content["sub_code"] == "TRADE_NOT_EXIST" {
 			data["status"] = CLOSED
+			data["return_code"] = SUCCESS
 		}
-		data["return_code"] = "FAIL"
 	}
 	return data
 }
