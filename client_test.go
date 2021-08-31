@@ -53,7 +53,7 @@ func TestPayQuery(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetVerifySignDataMap()
-	// fmt.Println("TestPayQuery______", req, err)
+	fmt.Println("TestPayQuery______", req, err)
 	t.Log(req, err, "|||")
 }
 

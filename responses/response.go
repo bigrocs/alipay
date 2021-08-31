@@ -17,6 +17,7 @@ package responses
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/clbanning/mxj"
@@ -170,11 +171,13 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
 		data["status"] = SUCCESS
-		data["total_fee"] = content["total_amount"]
+		total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
+		data["total_fee"] = total_amount
 		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
-			data["buyer_pay_fee"] = v
+			i, _ := strconv.ParseInt(v.(string), 10, 64)
+			data["buyer_pay_fee"] = i
 		} else {
-			data["buyer_pay_fee"] = content["total_amount"]
+			data["buyer_pay_fee"] = total_amount
 		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
@@ -211,11 +214,13 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		case "TRADE_FINISHED":
 			data["status"] = SUCCESS
 		}
-		data["total_fee"] = content["total_amount"]
+		total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
+		data["total_fee"] = total_amount
 		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
-			data["buyer_pay_fee"] = v
+			i, _ := strconv.ParseInt(v.(string), 10, 64)
+			data["buyer_pay_fee"] = i
 		} else {
-			data["buyer_pay_fee"] = content["total_amount"]
+			data["buyer_pay_fee"] = total_amount
 		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
@@ -245,7 +250,8 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
-		data["refund_fee"] = content["refund_fee"]
+		refund_fee, _ := strconv.ParseInt(content["refund_fee"].(string), 10, 64)
+		data["refund_fee"] = refund_fee
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["out_refund_no"] = content["out_request_no"]
@@ -263,8 +269,10 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 		data["return_msg"] = content["msg"]
 	}
 	if content["code"] == "10000" {
-		if refund_amount, ok := content["refund_amount"]; ok {
-			data["total_fee"] = content["total_amount"]
+		if _, ok := content["refund_amount"]; ok {
+			total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
+			data["total_fee"] = total_amount
+			refund_amount, _ := strconv.ParseInt(content["refund_amount"].(string), 10, 64)
 			data["refund_fee"] = refund_amount
 			data["trade_no"] = content["trade_no"]
 			data["out_trade_no"] = content["out_trade_no"]
