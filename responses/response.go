@@ -171,6 +171,11 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 		data["return_code"] = SUCCESS
 		data["status"] = SUCCESS
 		data["total_fee"] = content["total_amount"]
+		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
+			data["buyer_pay_fee"] = v
+		} else {
+			data["buyer_pay_fee"] = content["total_amount"]
+		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["alipay_logon_id"] = content["buyer_logon_id"]
@@ -207,6 +212,11 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 			data["status"] = SUCCESS
 		}
 		data["total_fee"] = content["total_amount"]
+		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
+			data["buyer_pay_fee"] = v
+		} else {
+			data["buyer_pay_fee"] = content["total_amount"]
+		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["alipay_logon_id"] = content["buyer_logon_id"]
