@@ -273,7 +273,11 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 		data["return_msg"] = content["msg"]
 	}
 	if content["code"] == "10000" {
-		if _, ok := content["refund_amount"]; ok {
+		data["status"] = USERPAYING
+		if v, ok := content["refund_status"]; ok {
+			if v.(string) == "REFUND_SUCCESS" {
+				data["status"] = SUCCESS
+			}
 			total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
 			data["total_fee"] = total_amount
 			refund_amount, _ := strconv.ParseInt(content["refund_amount"].(string), 10, 64)
@@ -281,7 +285,6 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 			data["trade_no"] = content["trade_no"]
 			data["out_trade_no"] = content["out_trade_no"]
 			data["out_refund_no"] = content["out_request_no"]
-			data["status"] = SUCCESS
 		}
 		data["return_code"] = SUCCESS
 	} else {
