@@ -7,4 +7,5 @@ require (
 	github.com/clbanning/mxj v1.8.4
 	github.com/iGoogle-ink/gopay v1.5.8
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
+	github.com/micro/go-micro/v2 v2.3.0
 )
