@@ -255,8 +255,10 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
-		refund_fee_float64, _ := strconv.ParseFloat(content["refund_fee"].(string), 64)
-		data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
+		if v, ok := content["refund_amount"]; ok {
+			refund_fee_float64, _ := strconv.ParseFloat(v.(string), 64)
+			data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
+		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["out_refund_no"] = content["out_request_no"]
@@ -281,7 +283,7 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 			}
 			total_amount_float64, _ := strconv.ParseFloat(content["total_amount"].(string), 64)
 			data["total_fee"] = decimal.NewFromFloat(total_amount_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
-			refund_fee_float64, _ := strconv.ParseFloat(content["refund_fee"].(string), 64)
+			refund_fee_float64, _ := strconv.ParseFloat(content["refund_amount"].(string), 64)
 			data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 
 			data["trade_no"] = content["trade_no"]
