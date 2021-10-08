@@ -93,7 +93,7 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	if err != nil {
 		return err
 	}
-	log.Info("Alipay[PostForm]", c.APIBaseURL(), urlParam, params)
+	log.Info("Alipay[PostForm]", c.APIBaseURL(), params)
 	log.Info("Alipay[PostForm]res", string(res))
 	response.SetHttpContent(res, "string")
 	return
