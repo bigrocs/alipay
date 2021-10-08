@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/clbanning/mxj"
+	"github.com/shopspring/decimal"
 
 	"github.com/bigrocs/alipay/config"
 	"github.com/bigrocs/alipay/requests"
@@ -171,13 +172,13 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
 		data["status"] = SUCCESS
-		total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
-		data["total_fee"] = total_amount
+		total_amount_float64, _ := strconv.ParseFloat(content["total_amount"].(string), 64)
+		data["total_fee"] = decimal.NewFromFloat(total_amount_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
-			i, _ := strconv.ParseInt(v.(string), 10, 64)
-			data["buyer_pay_fee"] = i
+			v_float64, _ := strconv.ParseFloat(v.(string), 64)
+			data["buyer_pay_fee"] = decimal.NewFromFloat(v_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 		} else {
-			data["buyer_pay_fee"] = total_amount
+			data["buyer_pay_fee"] = data["total_fee"]
 		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
@@ -218,13 +219,13 @@ func (res *CommonResponse) handerAlipayTradeQuery(content mxj.Map) mxj.Map {
 		case "TRADE_FINISHED":
 			data["status"] = SUCCESS
 		}
-		total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
-		data["total_fee"] = total_amount
+		total_amount_float64, _ := strconv.ParseFloat(content["total_amount"].(string), 64)
+		data["total_fee"] = decimal.NewFromFloat(total_amount_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 		if v, ok := content["buyer_pay_amount"]; ok { // 用户实际扣减金额
-			i, _ := strconv.ParseInt(v.(string), 10, 64)
-			data["buyer_pay_fee"] = i
+			v_float64, _ := strconv.ParseFloat(v.(string), 64)
+			data["buyer_pay_fee"] = decimal.NewFromFloat(v_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 		} else {
-			data["buyer_pay_fee"] = total_amount
+			data["buyer_pay_fee"] = data["total_fee"]
 		}
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
@@ -254,8 +255,8 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
-		refund_fee, _ := strconv.ParseInt(content["refund_fee"].(string), 10, 64)
-		data["refund_fee"] = refund_fee
+		refund_fee_float64, _ := strconv.ParseFloat(content["refund_fee"].(string), 64)
+		data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
 		data["out_refund_no"] = content["out_request_no"]
@@ -278,10 +279,11 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 			if v.(string) == "REFUND_SUCCESS" {
 				data["status"] = SUCCESS
 			}
-			total_amount, _ := strconv.ParseInt(content["total_amount"].(string), 10, 64)
-			data["total_fee"] = total_amount
-			refund_amount, _ := strconv.ParseInt(content["refund_amount"].(string), 10, 64)
-			data["refund_fee"] = refund_amount
+			total_amount_float64, _ := strconv.ParseFloat(content["total_amount"].(string), 64)
+			data["total_fee"] = decimal.NewFromFloat(total_amount_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
+			refund_fee_float64, _ := strconv.ParseFloat(content["refund_fee"].(string), 64)
+			data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
+
 			data["trade_no"] = content["trade_no"]
 			data["out_trade_no"] = content["out_trade_no"]
 			data["out_refund_no"] = content["out_request_no"]
