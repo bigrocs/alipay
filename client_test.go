@@ -10,29 +10,29 @@ import (
 
 func TestPay(t *testing.T) {
 	// 创建连接
-	client := NewClient()
-	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
-	client.Config.Sandbox = false
-	// 配置参数
-	request := requests.NewCommonRequest()
-	request.ApiName = "alipay.trade.pay"
-	request.BizContent = map[string]interface{}{
-		"subject":         "测试商品名称1",
-		"scene":           "bar_code",
-		"auth_code":       "287643781357659050",
-		"out_trade_no":    "GZ2020010117534314526",
-		"total_amount":    0.01,
-		"timeout_express": "2m",
-		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("PAY_ALIPAY_SYS_SERVICE_PROVIDER_ID")},
-	}
-	// 请求
-	response, err := client.ProcessCommonRequest(request)
-	req, err := response.GetVerifySignDataMap()
-	// fmt.Println("TestPay______", req, err)
-	t.Log(req, err, "|||")
+	// client := NewClient()
+	// client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	// client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	// client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	// client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	// client.Config.Sandbox = false
+	// // 配置参数
+	// request := requests.NewCommonRequest()
+	// request.ApiName = "alipay.trade.pay"
+	// request.BizContent = map[string]interface{}{
+	// 	"subject":         "测试商品名称1",
+	// 	"scene":           "bar_code",
+	// 	"auth_code":       "287643781357659050",
+	// 	"out_trade_no":    "GZ2020010117534314526",
+	// 	"total_amount":    0.01,
+	// 	"timeout_express": "2m",
+	// 	"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("PAY_ALIPAY_SYS_SERVICE_PROVIDER_ID")},
+	// }
+	// // 请求
+	// response, err := client.ProcessCommonRequest(request)
+	// req, err := response.GetVerifySignDataMap()
+	// // fmt.Println("TestPay______", req, err)
+	// t.Log(req, err, "|||")
 }
 
 func TestPayQuery(t *testing.T) {
@@ -52,78 +52,103 @@ func TestPayQuery(t *testing.T) {
 	// 请求
 	response, err := client.ProcessCommonRequest(request)
 	req, err := response.GetVerifySignDataMap()
+	// fmt.Println("TestPayQuery______", req, err)
+	t.Log(req, err, "|||")
+}
+func TestPayCreate(t *testing.T) {
+	// 创建连接
+	client := NewClient()
+	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	client.Config.Sandbox = false
+	// 配置参数
+	request := requests.NewCommonRequest()
+	request.ApiName = "alipay.trade.create"
+	request.BizContent = map[string]interface{}{
+		"subject":         "测试商品名称1",
+		"out_trade_no":    "GZ2020010117534314527",
+		"total_amount":    0.01,
+		"timeout_express": "2m",
+		"buyer_id":        "2088002104076813",
+		"extend_params":   map[string]interface{}{"sys_service_provider_id": os.Getenv("PAY_ALIPAY_SYS_SERVICE_PROVIDER_ID")},
+	}
+	// 请求
+	response, err := client.ProcessCommonRequest(request)
+	req, err := response.GetVerifySignDataMap()
 	fmt.Println("TestPayQuery______", req, err)
 	t.Log(req, err, "|||")
 }
 
 func TestPayRefund(t *testing.T) {
 	// 创建连接
-	client := NewClient()
-	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
-	client.Config.Sandbox = false
-	// 配置参数
-	request := requests.NewCommonRequest()
-	request.ApiName = "alipay.trade.refund"
-	request.BizContent = map[string]interface{}{
-		"out_trade_no":   "GZ2020010117534314526",
-		"out_request_no": "GZ2020010117534314526_1",
-		"refund_amount":  0.01,
-	}
-	// 请求
-	response, err := client.ProcessCommonRequest(request)
-	req, err := response.GetVerifySignDataMap()
-	// fmt.Println("TestPayRefund______", req, err)
-	t.Log(req, err, "|||")
+	// client := NewClient()
+	// client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	// client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	// client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	// client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	// client.Config.Sandbox = false
+	// // 配置参数
+	// request := requests.NewCommonRequest()
+	// request.ApiName = "alipay.trade.refund"
+	// request.BizContent = map[string]interface{}{
+	// 	"out_trade_no":   "GZ2020010117534314526",
+	// 	"out_request_no": "GZ2020010117534314526_1",
+	// 	"refund_amount":  0.01,
+	// }
+	// // 请求
+	// response, err := client.ProcessCommonRequest(request)
+	// req, err := response.GetVerifySignDataMap()
+	// // fmt.Println("TestPayRefund______", req, err)
+	// t.Log(req, err, "|||")
 }
 
 func TestPayRefundQuery(t *testing.T) {
 	// 创建连接
-	client := NewClient()
-	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
-	client.Config.Sandbox = false
-	// 配置参数
-	request := requests.NewCommonRequest()
-	request.ApiName = "alipay.trade.fastpay.refund.query"
-	request.BizContent = map[string]interface{}{
-		"out_trade_no":   "GZ2020010117534314526",
-		"out_request_no": "GZ2020010117534314526_1",
-		// "query_options": []string{
-		// 	"refund_royaltys",
-		// },
-	}
-	// 请求
-	response, err := client.ProcessCommonRequest(request)
-	req, err := response.GetVerifySignDataMap()
-	fmt.Println("TestPayRefundQuery______", req, err)
-	t.Log(req, err, "|||")
+	// client := NewClient()
+	// client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	// client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	// client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	// client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	// client.Config.Sandbox = false
+	// // 配置参数
+	// request := requests.NewCommonRequest()
+	// request.ApiName = "alipay.trade.fastpay.refund.query"
+	// request.BizContent = map[string]interface{}{
+	// 	"out_trade_no":   "GZ2020010117534314526",
+	// 	"out_request_no": "GZ2020010117534314526_1",
+	// 	// "query_options": []string{
+	// 	// 	"refund_royaltys",
+	// 	// },
+	// }
+	// // 请求
+	// response, err := client.ProcessCommonRequest(request)
+	// req, err := response.GetVerifySignDataMap()
+	// // fmt.Println("TestPayRefundQuery______", req, err)
+	// t.Log(req, err, "|||")
 }
 
 func TestQueryUserID(t *testing.T) {
-	// 创建连接
-	client := NewClient()
-	client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
-	client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
-	client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
-	client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
-	client.Config.Sandbox = false
-	// 配置参数
-	request := requests.NewCommonRequest()
-	request.ApiName = "alipay.mobile.shake.user.query"
-	request.BizContent = map[string]interface{}{
-		"dynamic_id_type": "qr_code",
-		"dynamic_id":      "285479049183432686",
-	}
-	// 请求
-	response, err := client.ProcessCommonRequest(request)
-	req, err := response.GetVerifySignDataMap()
-	fmt.Println("TestQueryUserID______", req, err)
-	t.Log(req, err, "|||")
+	// // 创建连接
+	// client := NewClient()
+	// client.Config.AppId = os.Getenv("PAY_ALIPAY_APPID")
+	// client.Config.PrivateKey = os.Getenv("PAY_ALIPAY_PRIVATE_KEY")
+	// client.Config.AliPayPublicKey = os.Getenv("PAY_ALIPAY_ALIPAY_PUBLIC_KEY")
+	// client.Config.AppAuthToken = os.Getenv("PAY_ALIPAY_APP_AUTH_TOKEN")
+	// client.Config.Sandbox = false
+	// // 配置参数
+	// request := requests.NewCommonRequest()
+	// request.ApiName = "alipay.mobile.shake.user.query"
+	// request.BizContent = map[string]interface{}{
+	// 	"dynamic_id_type": "qr_code",
+	// 	"dynamic_id":      "285479049183432686",
+	// }
+	// // 请求
+	// response, err := client.ProcessCommonRequest(request)
+	// req, err := response.GetVerifySignDataMap()
+	// // fmt.Println("TestQueryUserID______", req, err)
+	// t.Log(req, err, "|||")
 }
 
 // map[
