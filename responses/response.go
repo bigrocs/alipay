@@ -155,7 +155,9 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 	if res.Request.ApiName == "alipay.trade.fastpay.refund.query" {
 		data = res.handerAlipayTradeRefundQuery(content)
 	}
-
+	if res.Request.ApiName == "alipay.system.oauth.token" {
+		data = res.handerAlipayOauthToken(content)
+	}
 	data["channel"] = "alipay" //渠道
 	data["content"] = content
 	return data, err
@@ -298,5 +300,15 @@ func (res *CommonResponse) handerAlipayTradeRefundQuery(content mxj.Map) mxj.Map
 			data["return_code"] = SUCCESS
 		}
 	}
+	return data
+}
+
+func (res *CommonResponse) handerAlipayOauthToken(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	data["access_token"] = content["access_token"]
+	data["expires_in"] = content["expires_in"]
+	data["refresh_token"] = content["refresh_token"]
+	data["re_expires_in"] = content["re_expires_in"]
+	data["alipay_user_id"] = content["user_id"]
 	return data
 }
