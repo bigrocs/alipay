@@ -83,6 +83,11 @@ func (c *Common) Request(response *responses.CommonResponse) (err error) {
 	} else {
 		params["version"] = "1.0"
 	}
+	if req.ApiName == "alipay.system.oauth.token" {
+		delete(params, "biz_content")
+		params["code"] = req.BizContent["code"]
+		params["grant_type"] = req.BizContent["grant_type"]
+	}
 	sign, err := util.Sign(params, con.PrivateKey, params["sign_type"].(string)) // 开发签名
 	if err != nil {
 		return err
