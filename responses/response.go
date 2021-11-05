@@ -194,7 +194,6 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 	} else {
 		data["return_code"] = "FAIL"
 		if content["code"] == "10003" {
-			data["return_code"] = SUCCESS
 			data["status"] = USERPAYING
 		}
 	}
