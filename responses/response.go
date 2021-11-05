@@ -193,9 +193,10 @@ func (res *CommonResponse) handerAlipayTradePay(content mxj.Map) mxj.Map {
 		}
 	} else {
 		data["return_code"] = "FAIL"
-	}
-	if content["code"] == "10003" {
-		data["status"] = USERPAYING
+		if content["code"] == "10003" {
+			data["return_code"] = SUCCESS
+			data["status"] = USERPAYING
+		}
 	}
 
 	return data
@@ -257,6 +258,7 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 	}
 	if content["code"] == "10000" {
 		data["return_code"] = SUCCESS
+		data["status"] = SUCCESS
 		if v, ok := content["refund_amount"]; ok {
 			refund_fee_float64, _ := strconv.ParseFloat(v.(string), 64)
 			data["refund_fee"] = decimal.NewFromFloat(refund_fee_float64).Mul(decimal.NewFromFloat(float64(100))).IntPart()
