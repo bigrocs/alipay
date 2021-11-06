@@ -267,6 +267,7 @@ func (res *CommonResponse) handerAlipayTradeRefund(content mxj.Map) mxj.Map {
 		data["out_refund_no"] = content["out_request_no"]
 	} else {
 		data["return_code"] = "FAIL"
+		data["status"] = WAITING
 	}
 	return data
 }
