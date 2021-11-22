@@ -78,7 +78,7 @@ func (res *CommonResponse) GetVerifySignDataMap() (m mxj.Map, err error) {
 			return res.GetSignDataMap()
 		}
 	} else {
-		return r, errors.New("sign is not")
+		return r, errors.New("res sign is not")
 	}
 	return
 }
