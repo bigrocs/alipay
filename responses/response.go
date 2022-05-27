@@ -334,6 +334,7 @@ func (res *CommonResponse) handerAlipayTradeCreate(content mxj.Map) mxj.Map {
 		data["status"] = USERPAYING
 		data["trade_no"] = content["trade_no"]
 		data["out_trade_no"] = content["out_trade_no"]
+		data["prepay_id"] = content["trade_no"]
 	} else {
 		data["return_code"] = "FAIL"
 		if content["code"] == "10003" {
