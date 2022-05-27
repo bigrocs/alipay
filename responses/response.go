@@ -155,8 +155,11 @@ func (res *CommonResponse) GetSignDataMap() (mxj.Map, error) {
 	if res.Request.ApiName == "alipay.trade.fastpay.refund.query" {
 		data = res.handerAlipayTradeRefundQuery(content)
 	}
-	if res.Request.ApiName == "alipay.system.oauth.token" {
-		data = res.handerAlipayOauthToken(content)
+	if res.Request.ApiName == "alipay.trade.pay" {
+		data = res.handerAlipayTradePay(content)
+	}
+	if res.Request.ApiName == "alipay.trade.create" {
+		data = res.handerAlipayTradeCreate(content)
 	}
 	data["channel"] = "alipay" //渠道
 	data["content"] = content
@@ -312,5 +315,31 @@ func (res *CommonResponse) handerAlipayOauthToken(content mxj.Map) mxj.Map {
 	data["refresh_token"] = content["refresh_token"]
 	data["re_expires_in"] = content["re_expires_in"]
 	data["alipay_user_id"] = content["user_id"]
+	return data
+}
+
+// map[app_auth_token:202205BB7ffc4595eb314129b21c4f0ea5783X99 app_id:2017062907594357 biz_content:{"body":"525254b6-9179-4989-a141-7e744db65407","buyer_id":"2088002104076813","extend_params":{"sys_service_provider_id":"2088721207111299"},"out_trade_no":"20220527181103334433","subject":"二维码支付C2B","timeout_express":"2m","total_amount":"0.01"} charset:utf-8 format:JSON method:alipay.trade.create notify_url:https://api.bichengbituo.com/pay-api/notify/alipay sign:kdimfhAAFXgxY9eQcsC5v4QD6/LdHMVhamxbmrMi2u9kiKR+bKffAQZzkxcjMV5ogLlJEcoDFfy0LtiEP26WGMp+bVPYEPX+ndQpCwGMT2P8w//pCj39pxZP9W9cZBFXNT1GFFr1KhW+azNDRAU1NwryanqmwT92g6zo5dJ4EfrCea1xMjglNh5bMNRNnU7g7oait4nqM5POUTeJISsNHccMATrsdAwjBRexlUcwj/Lr+ZcS3qn1Q4ZbRsxRjIfWn9KPx5xP7+/TniJSAxNw1jPn0Cj94wpsF2f8WGXebdlEhz7SaQ+M7FCzRkEAlQBFEam6akyfYqjN2yrv2guqGA== sign_type:RSA2 timestamp:2022-05-27 18:11:04 version:1.0]]
+// {"alipay_trade_create_response":{"code":"10000","msg":"Success","out_trade_no":"20220527181103334433","trade_no":"2022052722001476811409224896"},"sign":"I2A0AVfw6q0Yi8OCBcRlnpVOmj3yWJCkQqCRJjrBC6cVcLuhGw5SgATIa9tKjEQanA3wmQk9I+e6wticPmShXEOUducEu4t8um7sCQQYVspoJl6oCi2y7trJHX4/kNk21+WbNExTu31aan2waY/nIIGq76an6VorWxZziK0BmPRwYUQs7gq6lhXBuNsGTvDS+b8mSbfBtZz1t9QzM286vQUOcbGBSNQF51RqpkMEkZ1YQbXn1ZBp1BCNzWY4Fy838zcboMfOQ89vRhNsWbEHUc0Deqo0ZiFNVfp87L83o7Dh9Lamk8/F3mq8AV6cJa+xMqdIV5nD+9OLzNYOb4+7sQ=="} <nil>]
+
+func (res *CommonResponse) handerAlipayTradeCreate(content mxj.Map) mxj.Map {
+	data := mxj.New()
+	data["status"] = "" // 状态
+	if sub_msg, ok := content["sub_msg"]; ok {
+		data["return_msg"] = sub_msg
+	} else {
+		data["return_msg"] = content["msg"]
+	}
+	if content["code"] == "10000" {
+		data["return_code"] = SUCCESS
+		data["status"] = USERPAYING
+		data["trade_no"] = content["trade_no"]
+		data["out_trade_no"] = content["out_trade_no"]
+	} else {
+		data["return_code"] = "FAIL"
+		if content["code"] == "10003" {
+			data["status"] = USERPAYING
+		}
+	}
+
 	return data
 }
